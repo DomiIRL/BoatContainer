@@ -93,6 +93,10 @@ public class CustomBoatItem extends Item {
 		}
 	}
 
+	public Boat.Type getType() {
+		return type;
+	}
+
 	protected void modifyBoat(Boat boatEntity, ItemStack itemStack) {
 
 	}

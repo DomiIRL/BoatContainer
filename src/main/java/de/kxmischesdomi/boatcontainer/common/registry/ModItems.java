@@ -1,7 +1,10 @@
 package de.kxmischesdomi.boatcontainer.common.registry;
 
+import com.google.gson.JsonElement;
 import com.mojang.datafixers.util.Function5;
 import de.kxmischesdomi.boatcontainer.BoatContainer;
+import de.kxmischesdomi.boatcontainer.common.compatability.CompatabilityHelper;
+import de.kxmischesdomi.boatcontainer.common.compatability.IModCompatibility;
 import de.kxmischesdomi.boatcontainer.common.entity.ChestBoatEntity;
 import de.kxmischesdomi.boatcontainer.common.entity.EnderChestBoatEntity;
 import de.kxmischesdomi.boatcontainer.common.entity.FurnaceBoatEntity;
@@ -25,8 +28,7 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author KxmischesDomi | https://github.com/kxmischesdomi
@@ -34,11 +36,29 @@ import java.util.List;
  */
 public class ModItems {
 
+	public static final Map<ResourceLocation, JsonElement> recipesToLoad = new HashMap<>();
+
 	public static CustomBoatItem[] CHEST_BOAT = registerBoat("chest_boat", ModEntities.CHEST_BOAT, ChestBoatEntity::new, true);
 	public static CustomBoatItem[] ENDER_CHEST_BOAT = registerBoat("ender_chest_boat", ModEntities.ENDER_CHEST_BOAT, EnderChestBoatEntity::new);
 	public static CustomBoatItem[] FURNACE_BOAT = registerBoat("furnace_boat", ModEntities.FURNACE_BOAT, FurnaceBoatEntity::new);
 
-	public static void init() {}
+	public static void init() {
+		for (CustomBoatItem item : ENDER_CHEST_BOAT) {
+			addRecipe(item, "ender_chest_boat", new ResourceLocation("ender_chest"));
+
+		}
+		for (CustomBoatItem item : FURNACE_BOAT) {
+			addRecipe(item, "furnace_boat", new ResourceLocation("furnace"));
+		}
+	}
+
+	private static void addRecipe(CustomBoatItem item, String name, ResourceLocation ingredient) {
+		Type boatType = item.getType();
+		ResourceLocation originLocation = new ResourceLocation(boatType.getName());
+		ResourceLocation originBoatLocation = new ResourceLocation(boatType.getName() + "_boat");
+		ResourceLocation boatLocation = new ResourceLocation(BoatContainer.MOD_ID, originLocation.getPath() + "_" + name);
+		recipesToLoad.put(boatLocation, CompatabilityHelper.createBoatRecipe(name, boatLocation, originBoatLocation, ingredient));
+	}
 
 	public static CustomBoatItem[] registerBoat(String name, EntityType<? extends OverriddenBoatEntity> type, Function5<EntityType<? extends OverriddenBoatEntity>, Level, Double, Double, Double, ? extends OverriddenBoatEntity> instanceCreator) {
 		return registerBoat(name, type, instanceCreator, false);
@@ -55,12 +75,9 @@ public class ModItems {
 					settings.tab(CreativeModeTab.TAB_TRANSPORTATION);
 				}
 
-				String valueName = value.getName();
-				if (value.getName().contains(":")) {
-					valueName = new ResourceLocation(valueName).getPath();
-				}
+				ResourceLocation originBoatLocation = new ResourceLocation(value.getName() + "_" + name);
 
-				CustomBoatItem item = register(valueName + "_" + name, new CustomBoatItem(type, instanceCreator, value, settings));
+				CustomBoatItem item = register(originBoatLocation.getPath(), new CustomBoatItem(type, instanceCreator, value, settings));
 				list.add(item);
 				registerBoatDispenserBehavior(item, type, instanceCreator);
 			} catch (Exception exception) {

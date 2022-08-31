@@ -66,9 +66,7 @@ public class ModItems {
 		for (Type value : Type.values()) {
 			try {
 				Properties settings = new Properties().stacksTo(1);
-				if (!hideItem) {
-					settings.tab(CreativeModeTab.TAB_TRANSPORTATION);
-				}
+				settings.tab(CreativeModeTab.TAB_TRANSPORTATION);
 
 				ResourceLocation originBoatLocation = new ResourceLocation(value.getName() + "_" + name);
 

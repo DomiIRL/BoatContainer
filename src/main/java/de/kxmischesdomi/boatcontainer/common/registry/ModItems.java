@@ -54,7 +54,13 @@ public class ModItems {
 				if (!hideItem) {
 					settings.tab(CreativeModeTab.TAB_TRANSPORTATION);
 				}
-				CustomBoatItem item = register(value.getName() + "_" + name, new CustomBoatItem(type, instanceCreator, value, settings));
+
+				String valueName = value.getName();
+				if (value.getName().contains(":")) {
+					valueName = new ResourceLocation(valueName).getPath();
+				}
+
+				CustomBoatItem item = register(valueName + "_" + name, new CustomBoatItem(type, instanceCreator, value, settings));
 				list.add(item);
 				registerBoatDispenserBehavior(item, type, instanceCreator);
 			} catch (Exception exception) {

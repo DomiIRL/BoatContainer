@@ -4,7 +4,6 @@ import com.google.gson.JsonElement;
 import com.mojang.datafixers.util.Function5;
 import de.kxmischesdomi.boatcontainer.BoatContainer;
 import de.kxmischesdomi.boatcontainer.common.compatability.CompatabilityHelper;
-import de.kxmischesdomi.boatcontainer.common.compatability.IModCompatibility;
 import de.kxmischesdomi.boatcontainer.common.entity.ChestBoatEntity;
 import de.kxmischesdomi.boatcontainer.common.entity.EnderChestBoatEntity;
 import de.kxmischesdomi.boatcontainer.common.entity.FurnaceBoatEntity;
@@ -36,7 +35,7 @@ import java.util.*;
  */
 public class ModItems {
 
-	public static final Map<ResourceLocation, JsonElement> recipesToLoad = new HashMap<>();
+	public static final Map<ResourceLocation, JsonElement> BOAT_RECIPES = new HashMap<>();
 
 	public static CustomBoatItem[] CHEST_BOAT = registerBoat("chest_boat", ModEntities.CHEST_BOAT, ChestBoatEntity::new, true);
 	public static CustomBoatItem[] ENDER_CHEST_BOAT = registerBoat("ender_chest_boat", ModEntities.ENDER_CHEST_BOAT, EnderChestBoatEntity::new);
@@ -57,7 +56,7 @@ public class ModItems {
 		ResourceLocation originLocation = new ResourceLocation(boatType.getName());
 		ResourceLocation originBoatLocation = new ResourceLocation(boatType.getName() + "_boat");
 		ResourceLocation boatLocation = new ResourceLocation(BoatContainer.MOD_ID, originLocation.getPath() + "_" + name);
-		recipesToLoad.put(boatLocation, CompatabilityHelper.createBoatRecipe(name, boatLocation, originBoatLocation, ingredient));
+		BOAT_RECIPES.put(boatLocation, CompatabilityHelper.createBoatRecipe(name, boatLocation, originBoatLocation, ingredient));
 	}
 
 	public static CustomBoatItem[] registerBoat(String name, EntityType<? extends OverriddenBoatEntity> type, Function5<EntityType<? extends OverriddenBoatEntity>, Level, Double, Double, Double, ? extends OverriddenBoatEntity> instanceCreator) {

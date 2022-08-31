@@ -14,14 +14,6 @@ import java.util.List;
  */
 public class CompatabilityHelper {
 
-    public static JsonObject createFurnaceBoatRecipe(ResourceLocation output, ResourceLocation boat) {
-        return createBoatRecipe("furnace_boat", output, boat, new ResourceLocation("furnace"));
-    }
-
-    public static JsonObject createEnderChestBoatRecipe(ResourceLocation output, ResourceLocation boat) {
-        return createBoatRecipe("ender_chest_boat", output, boat, new ResourceLocation("ender_chest"));
-    }
-
     public static JsonObject createBoatRecipe(String group, ResourceLocation output, ResourceLocation boat, ResourceLocation specialItem) {
         return createShapelessRecipeJson(group, output, boat, specialItem);
     }
@@ -29,6 +21,7 @@ public class CompatabilityHelper {
     public static JsonObject createShapelessRecipeJson(String group, ResourceLocation output, ResourceLocation... items) {
         JsonObject json = new JsonObject();
         json.addProperty("type", "minecraft:crafting_shapeless");
+        json.addProperty("group", group);
 
         JsonArray ingredients = new JsonArray();
         for (ResourceLocation item : items) {

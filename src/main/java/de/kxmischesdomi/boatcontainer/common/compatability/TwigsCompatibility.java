@@ -23,14 +23,7 @@ public class TwigsCompatibility implements IModCompatibility {
 
     @Override
     public void loadCompatibilityRecipes(Map<ResourceLocation, JsonElement> recipes) {
-        recipes.put(new ResourceLocation("boatcontainer", "stripped_bamboo_furnace_boat"), CompatabilityHelper.createFurnaceBoatRecipe(
-                new ResourceLocation("boatcontainer", "stripped_bamboo_furnace_boat"),
-                new ResourceLocation("twigs", "stripped_bamboo_boat")
-                ));
-        recipes.put(new ResourceLocation("boatcontainer", "stripped_bamboo_ender_chest_boat"), CompatabilityHelper.createEnderChestBoatRecipe(
-                new ResourceLocation("boatcontainer", "stripped_bamboo_ender_chest_boat"),
-                new ResourceLocation("twigs", "stripped_bamboo_boat")
-        ));
+
     }
 
 

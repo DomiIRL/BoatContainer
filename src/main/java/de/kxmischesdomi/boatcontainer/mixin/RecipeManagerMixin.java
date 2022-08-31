@@ -12,7 +12,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.util.perf.Profiler;
 
 import java.util.Map;
 
@@ -25,7 +24,7 @@ public class RecipeManagerMixin {
 
     @Inject(method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V", at = @At("HEAD"))
     public void interceptApply(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profilerFiller, CallbackInfo ci) {
-        ModItems.recipesToLoad.forEach(map::put);
+        ModItems.BOAT_RECIPES.forEach(map::put);
         for (IModCompatibility compatibility : BoatContainer.getLoadedCompatibilities()) {
             compatibility.loadCompatibilityRecipes(map);
         }

@@ -6,7 +6,8 @@
 	"mixins": [
 		"BoatEntityAccessor",
 		"BoatEntityMixin",
-		"ServerGamePacketListenerImplMixin"
+		"ServerGamePacketListenerImplMixin",
+		"RecipeManagerMixin"
 	],
 	"client": [
 		"client.MultiPlayerGameModeMixin"

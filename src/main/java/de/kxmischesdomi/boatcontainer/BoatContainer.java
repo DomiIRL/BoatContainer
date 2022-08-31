@@ -12,6 +12,7 @@ public class BoatContainer implements ModInitializer {
 	public void onInitialize() {
 		ModItems.init();
 		ModEntities.init();
+		initCompatibility(new TwigsCompatibility());
 	}
 
 }

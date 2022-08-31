@@ -46,7 +46,17 @@ public class ModItems {
 
 		for (Type value : Type.values()) {
 			try {
-				CustomBoatItem item = register(value.getName() + "_" + name, new CustomBoatItem(type, instanceCreator, value, new Properties().stacksTo(1).tab(CreativeModeTab.TAB_TRANSPORTATION)));
+				Properties settings = new Properties().stacksTo(1);
+				if (!hideItem) {
+					settings.tab(CreativeModeTab.TAB_TRANSPORTATION);
+				}
+
+				String valueName = value.getName();
+				if (value.getName().contains(":")) {
+					valueName = new ResourceLocation(valueName).getPath();
+				}
+
+				CustomBoatItem item = register(valueName + "_" + name, new CustomBoatItem(type, instanceCreator, value, settings));
 				list.add(item);
 
 				registerBoatDispenserBehavior(item, type, instanceCreator);

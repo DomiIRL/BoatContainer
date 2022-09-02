@@ -3,7 +3,7 @@ package de.kxmischesdomi.boatcontainer.common.registry;
 import com.google.gson.JsonElement;
 import com.mojang.datafixers.util.Function5;
 import de.kxmischesdomi.boatcontainer.BoatContainer;
-import de.kxmischesdomi.boatcontainer.common.compatability.CompatabilityHelper;
+import de.kxmischesdomi.boatcontainer.common.RecipeHelper;
 import de.kxmischesdomi.boatcontainer.common.entity.ChestBoatEntity;
 import de.kxmischesdomi.boatcontainer.common.entity.EnderChestBoatEntity;
 import de.kxmischesdomi.boatcontainer.common.entity.FurnaceBoatEntity;
@@ -56,7 +56,7 @@ public class ModItems {
 		ResourceLocation originLocation = new ResourceLocation(boatType.getName());
 		ResourceLocation originBoatLocation = new ResourceLocation(boatType.getName() + "_boat");
 		ResourceLocation boatLocation = new ResourceLocation(BoatContainer.MOD_ID, originLocation.getPath() + "_" + name);
-		BOAT_RECIPES.put(boatLocation, CompatabilityHelper.createBoatRecipe(name, boatLocation, originBoatLocation, ingredient));
+		BOAT_RECIPES.put(boatLocation, RecipeHelper.createBoatRecipe(name, boatLocation, originBoatLocation, ingredient));
 	}
 
 	public static CustomBoatItem[] registerBoat(String name, EntityType<? extends OverriddenBoatEntity> type, Function5<EntityType<? extends OverriddenBoatEntity>, Level, Double, Double, Double, ? extends OverriddenBoatEntity> instanceCreator) {

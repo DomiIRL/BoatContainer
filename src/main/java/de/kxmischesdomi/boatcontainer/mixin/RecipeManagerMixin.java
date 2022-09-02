@@ -2,7 +2,6 @@ package de.kxmischesdomi.boatcontainer.mixin;
 
 import com.google.gson.JsonElement;
 import de.kxmischesdomi.boatcontainer.BoatContainer;
-import de.kxmischesdomi.boatcontainer.common.compatability.IModCompatibility;
 import de.kxmischesdomi.boatcontainer.common.registry.ModItems;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -25,9 +24,6 @@ public class RecipeManagerMixin {
     @Inject(method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V", at = @At("HEAD"))
     public void interceptApply(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profilerFiller, CallbackInfo ci) {
         ModItems.BOAT_RECIPES.forEach(map::put);
-        for (IModCompatibility compatibility : BoatContainer.getLoadedCompatibilities()) {
-            compatibility.loadCompatibilityRecipes(map);
-        }
     }
 
 }

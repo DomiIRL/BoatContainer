@@ -1,4 +1,4 @@
-package de.kxmischesdomi.boatcontainer.common.compatability;
+package de.kxmischesdomi.boatcontainer.common;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -12,7 +12,7 @@ import java.util.List;
  * @author KxmischesDomi | https://github.com/kxmischesdomi
  * @since 1.0
  */
-public class CompatabilityHelper {
+public class RecipeHelper {
 
     public static JsonObject createBoatRecipe(String group, ResourceLocation output, ResourceLocation boat, ResourceLocation specialItem) {
         return createShapelessRecipeJson(group, output, boat, specialItem);

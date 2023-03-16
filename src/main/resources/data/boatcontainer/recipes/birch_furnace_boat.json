@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "furnace_boat",
+  "ingredients": [
+    {
+      "item": "minecraft:furnace"
+    },
+    {
+      "item": "minecraft:birch_boat"
+    }
+  ],
+  "result": {
+    "item": "boatcontainer:birch_furnace_boat",
+    "count": 1
+  }
+}

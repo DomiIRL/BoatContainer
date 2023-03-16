@@ -30,7 +30,7 @@ import java.util.Iterator;
  * @author KxmischesDomi | https://github.com/kxmischesdomi
  * @since 1.0
  */
-public abstract class StorageBoatEntity extends BoatWithBlockEntity implements Container, MenuProvider, HasCustomInventoryScreen {
+public abstract class StorageBoatEntity extends BoatWithBlockEntity implements Container, MenuProvider {
 
 	private NonNullList<ItemStack> inventory;
 	private ResourceLocation lootTableId;
@@ -46,7 +46,6 @@ public abstract class StorageBoatEntity extends BoatWithBlockEntity implements C
 		this.inventory = NonNullList.withSize(36, ItemStack.EMPTY);
 	}
 
-	@Override
 	public void openCustomInventoryScreen(Player player) {
 		player.openMenu(this);
 	}

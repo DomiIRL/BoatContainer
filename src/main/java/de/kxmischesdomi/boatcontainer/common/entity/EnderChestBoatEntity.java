@@ -29,7 +29,7 @@ import java.util.List;
  * @author KxmischesDomi | https://github.com/kxmischesdomi
  * @since 1.0
  */
-public class EnderChestBoatEntity extends BoatWithBlockEntity implements HasCustomInventoryScreen {
+public class EnderChestBoatEntity extends BoatWithBlockEntity {
 
 	public EnderChestBoatEntity(EntityType<? extends Boat> entityType, Level world) {
 		super(entityType, world);
@@ -43,7 +43,6 @@ public class EnderChestBoatEntity extends BoatWithBlockEntity implements HasCust
 		super(ModEntities.ENDER_CHEST_BOAT, world);
 	}
 
-	@Override
 	public void openCustomInventoryScreen(Player player) {
 		openEnderchest(player);
 	}
@@ -59,7 +58,7 @@ public class EnderChestBoatEntity extends BoatWithBlockEntity implements HasCust
 		player.openMenu(new SimpleMenuProvider((syncId, inventory, playerx) -> {
 			return ChestMenu.threeRows(syncId, inventory, enderChestInventory);
 		}, new TranslatableComponent(this.getType().getDescriptionId())));
-	}
+  }
 
 	@Override
 	public ItemStack getPickResult() {

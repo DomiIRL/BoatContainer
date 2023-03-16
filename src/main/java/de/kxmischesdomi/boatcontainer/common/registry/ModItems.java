@@ -42,6 +42,10 @@ public class ModItems {
 	public static CustomBoatItem[] FURNACE_BOAT = registerBoat("furnace_boat", ModEntities.FURNACE_BOAT, FurnaceBoatEntity::new);
 
 	public static void init() {
+    for (CustomBoatItem item : CHEST_BOAT) {
+      addRecipe(item, "chest_boat", new ResourceLocation("chest"));
+    }
+
 		for (CustomBoatItem item : ENDER_CHEST_BOAT) {
 			addRecipe(item, "ender_chest_boat", new ResourceLocation("ender_chest"));
 
@@ -60,19 +64,24 @@ public class ModItems {
 	}
 
 	public static CustomBoatItem[] registerBoat(String name, EntityType<? extends OverriddenBoatEntity> type, Function5<EntityType<? extends OverriddenBoatEntity>, Level, Double, Double, Double, ? extends OverriddenBoatEntity> instanceCreator) {
+		return registerBoat(name, type, instanceCreator, false);
+	}
+
+	public static CustomBoatItem[] registerBoat(String name, EntityType<? extends OverriddenBoatEntity> type, Function5<EntityType<? extends OverriddenBoatEntity>, Level, Double, Double, Double, ? extends OverriddenBoatEntity> instanceCreator, boolean hideItem) {
 
 		List<CustomBoatItem> list = new ArrayList<>();
 
 		for (Type value : Type.values()) {
 			try {
 				Properties settings = new Properties().stacksTo(1);
-				settings.tab(CreativeModeTab.TAB_TRANSPORTATION);
+				if (!hideItem) {
+					settings.tab(CreativeModeTab.TAB_TRANSPORTATION);
+				}
 
 				ResourceLocation originBoatLocation = new ResourceLocation(value.getName() + "_" + name);
 
 				CustomBoatItem item = register(originBoatLocation.getPath(), new CustomBoatItem(type, instanceCreator, value, settings));
 				list.add(item);
-
 				registerBoatDispenserBehavior(item, type, instanceCreator);
 			} catch (Exception exception) {
 				// Dont block mod loading for issues with other mods

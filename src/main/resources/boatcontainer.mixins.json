@@ -6,11 +6,7 @@
 	"mixins": [
 		"BoatEntityAccessor",
 		"BoatEntityMixin",
-		"ServerGamePacketListenerImplMixin",
 		"RecipeManagerMixin"
-	],
-	"client": [
-		"client.MultiPlayerGameModeMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

@@ -9,17 +9,19 @@ import de.kxmischesdomi.boatcontainer.common.entity.EnderChestBoatEntity;
 import de.kxmischesdomi.boatcontainer.common.entity.FurnaceBoatEntity;
 import de.kxmischesdomi.boatcontainer.common.entity.OverriddenBoatEntity;
 import de.kxmischesdomi.boatcontainer.common.item.CustomBoatItem;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.Boat.Type;
-import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Item.Properties;
 import net.minecraft.world.item.ItemStack;
@@ -37,7 +39,7 @@ public class ModItems {
 
 	public static final Map<ResourceLocation, JsonElement> BOAT_RECIPES = new HashMap<>();
 
-	public static CustomBoatItem[] CHEST_BOAT = registerBoat("chest_boat", ModEntities.CHEST_BOAT, ChestBoatEntity::new, true);
+	public static CustomBoatItem[] CHEST_BOAT = registerBoat("chest_boat", ModEntities.CHEST_BOAT, ChestBoatEntity::new);
 	public static CustomBoatItem[] ENDER_CHEST_BOAT = registerBoat("ender_chest_boat", ModEntities.ENDER_CHEST_BOAT, EnderChestBoatEntity::new);
 	public static CustomBoatItem[] FURNACE_BOAT = registerBoat("furnace_boat", ModEntities.FURNACE_BOAT, FurnaceBoatEntity::new);
 
@@ -49,6 +51,16 @@ public class ModItems {
 		for (CustomBoatItem item : FURNACE_BOAT) {
 			addRecipe(item, "furnace_boat", new ResourceLocation("furnace"));
 		}
+
+		ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(entries -> {
+			for (CustomBoatItem item : ENDER_CHEST_BOAT) {
+				entries.accept(item);
+			}
+			for (CustomBoatItem item : FURNACE_BOAT) {
+				entries.accept(item);
+			}
+		});
+
 	}
 
 	private static void addRecipe(CustomBoatItem item, String name, ResourceLocation ingredient) {
@@ -60,19 +72,12 @@ public class ModItems {
 	}
 
 	public static CustomBoatItem[] registerBoat(String name, EntityType<? extends OverriddenBoatEntity> type, Function5<EntityType<? extends OverriddenBoatEntity>, Level, Double, Double, Double, ? extends OverriddenBoatEntity> instanceCreator) {
-		return registerBoat(name, type, instanceCreator, false);
-	}
-
-	public static CustomBoatItem[] registerBoat(String name, EntityType<? extends OverriddenBoatEntity> type, Function5<EntityType<? extends OverriddenBoatEntity>, Level, Double, Double, Double, ? extends OverriddenBoatEntity> instanceCreator, boolean hideItem) {
 
 		List<CustomBoatItem> list = new ArrayList<>();
 
 		for (Type value : Type.values()) {
 			try {
 				Properties settings = new Properties().stacksTo(1);
-				if (!hideItem) {
-					settings.tab(CreativeModeTab.TAB_TRANSPORTATION);
-				}
 
 				ResourceLocation originBoatLocation = new ResourceLocation(value.getName() + "_" + name);
 
@@ -89,7 +94,7 @@ public class ModItems {
 	}
 
 	public static <T extends Item> T register(String name, T item) {
-		Registry.register(Registry.ITEM, new ResourceLocation(BoatContainer.MOD_ID, name), item);
+		Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(BoatContainer.MOD_ID, name), item);
 		return item;
 	}
 

@@ -7,6 +7,7 @@ import de.kxmischesdomi.boatcontainer.common.entity.FurnaceBoatEntity;
 import de.kxmischesdomi.boatcontainer.common.entity.OverriddenBoatEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
@@ -24,7 +25,7 @@ public class ModEntities {
 
 	private static <T extends OverriddenBoatEntity> EntityType<T> registerBoat(String id, FabricEntityTypeBuilder<T> builder) {
 		builder.dimensions(EntityDimensions.fixed(1.375F, 0.5625F)).trackRangeBlocks(10);
-		return Registry.register(Registry.ENTITY_TYPE, new ResourceLocation(BoatContainer.MOD_ID, id), builder.build());
+		return Registry.register(BuiltInRegistries.ENTITY_TYPE, new ResourceLocation(BoatContainer.MOD_ID, id), builder.build());
 	}
 
 	public static void init() { }

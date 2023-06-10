@@ -2,7 +2,6 @@ package de.kxmischesdomi.boatcontainer.common.item;
 
 import com.mojang.datafixers.util.Function5;
 import de.kxmischesdomi.boatcontainer.common.entity.OverriddenBoatEntity;
-import net.minecraft.core.BlockPos;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -67,7 +66,7 @@ public class CustomBoatItem extends Item {
 			if (hitResult.getType() == HitResult.Type.BLOCK) {
 
 				OverriddenBoatEntity boatEntity = instanceCreator.apply(entityType, world, hitResult.getLocation().x, hitResult.getLocation().y, hitResult.getLocation().z);
-				boatEntity.setType(this.type);
+				boatEntity.setVariant(this.type);
 				boatEntity.setYRot(user.getYRot());
 
 				if (!world.noCollision(boatEntity, boatEntity.getBoundingBox().inflate(-0.1D))) {
@@ -76,7 +75,7 @@ public class CustomBoatItem extends Item {
 					if (!world.isClientSide) {
 						modifyBoat(boatEntity, itemStack);
 						world.addFreshEntity(boatEntity);
-						world.gameEvent(user, GameEvent.ENTITY_PLACE, new BlockPos(hitResult.getLocation()));
+						world.gameEvent(user, GameEvent.ENTITY_PLACE, hitResult.getLocation());
 						if (!user.getAbilities().instabuild) {
 							itemStack.shrink(1);
 						}

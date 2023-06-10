@@ -9,6 +9,7 @@ import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 /**
  * @author KxmischesDomi | https://github.com/kxmischesdomi
@@ -30,7 +31,7 @@ public abstract class BoatWithBlockEntity extends OverriddenBoatEntity {
 	}
 
 	@Override
-	public void positionRider(Entity passenger) {
+	protected void positionRider(Entity passenger, MoveFunction moveFunction) {
 		if (this.hasPassenger(passenger)) {
 			float f = 0.0F;
 			float g = (float)((this.isRemoved() ? 0.009999999776482582D : this.getPassengersRidingOffset()) + passenger.getMyRidingOffset());

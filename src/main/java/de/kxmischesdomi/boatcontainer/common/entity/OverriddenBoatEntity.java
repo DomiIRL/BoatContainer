@@ -41,7 +41,7 @@ public abstract class OverriddenBoatEntity extends Boat {
 	public boolean hurt(DamageSource source, float amount) {
 		if (this.isInvulnerableTo(source)) {
 			return false;
-		} else if (!this.level.isClientSide && !this.isRemoved()) {
+		} else if (!this.level().isClientSide && !this.isRemoved()) {
 			this.setHurtDir(-this.getHurtDir());
 			this.setHurtTime(10);
 			this.setDamage(this.getDamage() + amount * 10.0F);
@@ -49,7 +49,7 @@ public abstract class OverriddenBoatEntity extends Boat {
 			this.gameEvent(GameEvent.ENTITY_DAMAGE, source.getEntity());
 			boolean bl = source.getEntity() instanceof Player && ((Player)source.getEntity()).getAbilities().instabuild;
 			if (bl || this.getDamage() > 40.0F) {
-				if (!bl && this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
+				if (!bl && this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
 					this.spawnAtLocation(this.getDropItem());
 					this.dropItems(source);
 				}

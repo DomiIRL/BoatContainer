@@ -1,7 +1,7 @@
 package de.kxmischesdomi.boatcontainer.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.entity.EntityRendererProvider.Context;
@@ -19,7 +19,7 @@ public class FurnaceBoatBlockRenderer extends BoatBlockRenderer {
 
 	@Override
 	public void preModify(PoseStack matrixStack, float f) {
-		matrixStack.mulPose(Vector3f.YP.rotationDegrees(-f));
+		matrixStack.mulPose(Axis.YP.rotationDegrees(-f));
 	}
 
 	@Override
@@ -28,8 +28,8 @@ public class FurnaceBoatBlockRenderer extends BoatBlockRenderer {
 	}
 
 	@Override
-	public Vector3f getDamagingRotation() {
-		return Vector3f.XN;
+	public Axis getDamagingRotation() {
+		return Axis.XN;
 	}
 
 }

@@ -11,6 +11,8 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.Boat;
@@ -47,7 +49,7 @@ public class FurnaceBoatEntity extends BoatWithBlockEntity {
 
 	@Override
 	public ItemStack getPickResult() {
-		int ordinal = getBoatType().ordinal();
+		int ordinal = getVariant().ordinal();
 		if (ModItems.FURNACE_BOAT.length > ordinal) {
 			return new ItemStack(ModItems.FURNACE_BOAT[ordinal]);
 		}
@@ -56,7 +58,7 @@ public class FurnaceBoatEntity extends BoatWithBlockEntity {
 
 	@Override
 	public void dropItems(DamageSource damageSource) {
-		if (!damageSource.isExplosion()) {
+		if (!damageSource.is(DamageTypes.EXPLOSION)) {
 			this.spawnAtLocation(Items.FURNACE.asItem());
 		}
 	}
@@ -70,7 +72,7 @@ public class FurnaceBoatEntity extends BoatWithBlockEntity {
 	@Override
 	public void tick() {
 		super.tick();
-		if (!this.level.isClientSide()) {
+		if (!this.level().isClientSide()) {
 			if (this.fuel > 0) {
 				--this.fuel;
 			}
@@ -89,7 +91,7 @@ public class FurnaceBoatEntity extends BoatWithBlockEntity {
 			double x = - add * s;
 			double z = add * c;
 
-			this.level.addParticle(ParticleTypes.LARGE_SMOKE, this.getX() + x, this.getY() + 1, this.getZ() + z, 0.0, 0.0, 0.0);
+			this.level().addParticle(ParticleTypes.LARGE_SMOKE, this.getX() + x, this.getY() + 1, this.getZ() + z, 0.0, 0.0, 0.0);
 		}
 	}
 
@@ -101,7 +103,7 @@ public class FurnaceBoatEntity extends BoatWithBlockEntity {
 				itemStack.shrink(1);
 			}
 			this.fuel += 3600;
-			return InteractionResult.sidedSuccess(this.level.isClientSide);
+			return InteractionResult.sidedSuccess(this.level().isClientSide);
 		}
 		return super.interact(player, interactionHand);
 	}

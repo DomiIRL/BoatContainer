@@ -2,6 +2,9 @@ package de.kxmischesdomi.boatcontainer.common.entity;
 
 import de.kxmischesdomi.boatcontainer.common.registry.ModEntities;
 import de.kxmischesdomi.boatcontainer.common.registry.ModItems;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
@@ -20,8 +23,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootContext.Builder;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 
@@ -58,14 +64,12 @@ public class EnderChestBoatEntity extends BoatWithBlockEntity implements HasCust
 
 	private void openEnderchest(Player player) {
 		PlayerEnderChestContainer enderChestInventory = player.getEnderChestInventory();
-		player.openMenu(new SimpleMenuProvider((syncId, inventory, playerx) -> {
-			return ChestMenu.threeRows(syncId, inventory, enderChestInventory);
-		}, MutableComponent.create(new TranslatableContents(this.getType().getDescriptionId()))));
+		player.openMenu(new SimpleMenuProvider((syncId, inventory, playerx) -> ChestMenu.threeRows(syncId, inventory, enderChestInventory), Component.translatable("container.enderchest")));
 	}
 
 	@Override
 	public ItemStack getPickResult() {
-		int ordinal = getBoatType().ordinal();
+		int ordinal = getVariant().ordinal();
 		if (ModItems.ENDER_CHEST_BOAT.length > ordinal) {
 			return new ItemStack(ModItems.ENDER_CHEST_BOAT[ordinal]);
 		}
@@ -75,8 +79,8 @@ public class EnderChestBoatEntity extends BoatWithBlockEntity implements HasCust
 	@Override
 	public void dropItems(DamageSource source) {
 		super.dropItems(source);
-		if (level.getServer() == null) return;
-		LootTable lootTable = level.getServer().getLootTables().get(new ResourceLocation("blocks/ender_chest"));
+		if (level().getServer() == null) return;
+		LootTable lootTable = level().getServer().getLootData().getLootTable(new ResourceLocation("blocks/ender_chest"));
 
 		Player killer = null;
 		ItemStack tool = ItemStack.EMPTY;
@@ -85,15 +89,12 @@ public class EnderChestBoatEntity extends BoatWithBlockEntity implements HasCust
 			tool = killer.getMainHandItem() == ItemStack.EMPTY ? killer.getOffhandItem() : killer.getMainHandItem();
 		}
 
-		Builder builder = new Builder((ServerLevel) level)
-				.withParameter(LootContextParams.ORIGIN, position())
+		ObjectArrayList<ItemStack> items = lootTable.getRandomItems(new LootParams.Builder(((ServerLevel) level())).withParameter(LootContextParams.ORIGIN, position())
 				.withParameter(LootContextParams.BLOCK_STATE, Blocks.ENDER_CHEST.defaultBlockState())
 				.withParameter(LootContextParams.TOOL, tool)
-				.withOptionalParameter(LootContextParams.THIS_ENTITY, killer)
-				.withRandom(this.random);
-		List<ItemStack> itemStacks = lootTable.getRandomItems(builder.create(LootContextParamSets.BLOCK));
+				.withOptionalParameter(LootContextParams.THIS_ENTITY, killer).create(LootContextParamSets.BLOCK));
 
-		for (ItemStack itemStack : itemStacks) {
+		for (ItemStack itemStack : items) {
 			spawnAtLocation(itemStack);
 		}
 

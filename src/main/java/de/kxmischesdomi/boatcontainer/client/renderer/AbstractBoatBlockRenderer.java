@@ -1,8 +1,7 @@
 package de.kxmischesdomi.boatcontainer.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -13,6 +12,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.level.block.state.BlockState;
+import org.joml.Quaternionf;
 
 /**
  * @author KxmischesDomi | https://github.com/kxmischesdomi
@@ -23,14 +23,15 @@ public abstract class AbstractBoatBlockRenderer extends BoatRenderer {
 
 	public AbstractBoatBlockRenderer(Context context) {
 		super(context, false);
+		this.shadowRadius = 0;
 	}
 
 	public abstract BlockState getBlockState(Boat boatEntity);
 	public abstract void preModify(PoseStack matrixStack, float f);
 	public abstract void afterModify(PoseStack matrixStack, float f);
 
-	public Vector3f getDamagingRotation() {
-		return Vector3f.XP;
+	public Axis getDamagingRotation() {
+		return Axis.XP;
 	}
 
 	@Override
@@ -39,6 +40,11 @@ public abstract class AbstractBoatBlockRenderer extends BoatRenderer {
 
 		BlockState blockState = getBlockState(boatEntity);
 		if (blockState == null) return;
+
+		if (boatEntity.getVariant() == Boat.Type.BAMBOO) {
+			matrixStack.translate(0, 0.25, 0);
+		}
+
 		preModify(matrixStack, f);
 
 		matrixStack.pushPose();
@@ -54,7 +60,7 @@ public abstract class AbstractBoatBlockRenderer extends BoatRenderer {
 
 		float k = boatEntity.getBubbleAngle(g);
 		if (!Mth.equal(k, 0.0F)) {
-			matrixStack.mulPose(new Quaternion(new Vector3f(1.0F, 0.0F, 1.0F), boatEntity.getBubbleAngle(g), true));
+			matrixStack.mulPose(new Quaternionf(1.0, 1.0, 1.0, boatEntity.getBubbleAngle(g)));
 		}
 
 		matrixStack.translate(-0.45, -0.2, -0.035);
@@ -62,7 +68,6 @@ public abstract class AbstractBoatBlockRenderer extends BoatRenderer {
 		afterModify(matrixStack, f);
 		Minecraft.getInstance().getBlockRenderer().renderSingleBlock(blockState, matrixStack, vertexConsumerProvider, i, OverlayTexture.NO_OVERLAY);
 		matrixStack.popPose();
-
 	}
 
 }
